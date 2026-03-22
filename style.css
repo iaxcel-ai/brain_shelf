@@ -1,12 +1,15 @@
 :root {
-    --primary: #333;
-    --secondary: #666;
-    --accent: #d35400;
-    --wiki: #2980b9;
-    --bg: #fff;
-    --sidebar-bg: #f9f9f9;
-    --border: #ddd;
-    --radius: 4px;
+    --primary: #1a1a1a;
+    --secondary: #555;
+    --accent: #6c5ce7;
+    --accent-glow: rgba(108, 92, 231, 0.2);
+    --wiki: #0984e3;
+    --bg: #ffffff;
+    --sidebar-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --border: #e1e4e8;
+    --radius: 8px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* Base Styles */
