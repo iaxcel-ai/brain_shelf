@@ -86,5 +86,17 @@
     </footer>
 
     <script src="app.js"></script>
+
+    <!-- ==================== MODALS ==================== -->
+    <div id="confirmModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Are you sure?</h3>
+            <p id="modalMessage">This will permanently remove all items from your reading list.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-confirm" id="modalConfirmBtn">Yes, Clear All</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

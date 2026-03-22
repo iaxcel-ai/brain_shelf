@@ -363,13 +363,25 @@ function removeFromList(index) {
 // Clear entire reading list
 function clearReadingList() {
     if (readingList.length === 0) return;
-    // Ask for confirmation before wiping everything
-    if (confirm('Remove all items from your reading list?')) {
+    
+    // Show custom modal instead of window.confirm
+    const modal = document.getElementById('confirmModal');
+    const confirmBtn = document.getElementById('modalConfirmBtn');
+    
+    modal.classList.remove('hidden');
+    
+    // Set up one-time event listener for confirm button
+    confirmBtn.onclick = function() {
         readingList = [];
         saveReadingList();
         renderReadingList();
         if (allResults.length > 0) applyFilters();
-    }
+        closeModal();
+    };
+}
+
+function closeModal() {
+    document.getElementById('confirmModal').classList.add('hidden');
 }
 
 
