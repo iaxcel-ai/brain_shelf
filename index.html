@@ -11,14 +11,15 @@
     <!-- ==================== HEADER ==================== -->
     <header class="header">
         <div class="header-inner">
-            <h1 class="logo">brain<span>_shelf</span></h1>
+            <h1 class="logo">brain<span>shelf</span></h1>
             <p class="tagline">Search books & Wikipedia in one place</p>
         </div>
     </header>
 
     <!-- ==================== SEARCH SECTION ==================== -->
     <main class="container">
-        <div class="search-section">
+        <section class="search-section" aria-labelledby="searchHeading">
+            <h2 id="searchHeading" class="sr-only">Search and Filters</h2>
             <div class="search-box">
                 <input 
                     type="text" 
@@ -51,27 +52,27 @@
                     📚 Reading List (<span id="listCount">0</span>)
                 </button>
             </div>
-        </div>
+        </section>
 
         <!-- STATUS MESSAGES (loading, errors) -->
         <div id="statusMessage" class="status-message hidden"></div>
 
         <!-- ==================== RESULTS ==================== -->
-        <div id="results" class="results-grid">
+        <section id="results" class="results-grid" aria-live="polite">
             <!-- Results get inserted here by JavaScript -->
-        </div>
+        </section>
 
         <!-- ==================== READING LIST SIDEBAR ==================== -->
-        <div id="readingList" class="reading-list hidden">
+        <aside id="readingList" class="reading-list hidden" aria-labelledby="readingListHeading">
             <div class="reading-list-header">
-                <h2>📚 Your Reading List</h2>
+                <h2 id="readingListHeading">📚 Your Reading List</h2>
                 <button onclick="toggleReadingList()">✕</button>
             </div>
             <div id="readingListItems" class="reading-list-items">
                 <!-- Saved items appear here -->
             </div>
             <button class="clear-list-btn" onclick="clearReadingList()">Clear All</button>
-        </div>
+        </aside>
     </main>
 
     <!-- ==================== FOOTER ==================== -->
