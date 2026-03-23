@@ -144,9 +144,30 @@ body {
     font-size: 0.9rem;
 }
 
-.status-message.loading { background: #eee; }
+.status-message.loading { background: transparent; padding: 2rem; }
 .status-message.error { background: #fee; color: #a00; border: 1px solid #ecc; }
 .status-message.info { background: #eef; color: #00a; border: 1px solid #cce; }
+
+/* Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border);
+    border-top: 4px solid var(--accent);
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-text {
+    font-weight: bold;
+    color: var(--secondary);
+}
 
 .hidden { display: none !important; }
 

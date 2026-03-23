@@ -403,7 +403,16 @@ function closeModal() {
 // 7. UI status display (loading, error, info)
 function showStatus(message, type) {
     const el = document.getElementById('statusMessage');
-    el.textContent = message;
+    
+    if (type === 'loading') {
+        el.innerHTML = `
+            <div class="spinner"></div>
+            <div class="spinner-text">${message}</div>
+        `;
+    } else {
+        el.textContent = message;
+    }
+    
     el.className = 'status-message ' + type; // removes 'hidden', adds type
 }
 
