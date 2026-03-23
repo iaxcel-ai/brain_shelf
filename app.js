@@ -111,36 +111,51 @@ async function fetchBooks(query) {
 
 // 3. Fetch Wikipedia articles (https://www.mediawiki.org/wiki/API:Search)
 async function fetchWikipedia(query) {
-    // Build the API URL
-    // Wikipedia API parameters for search and JSON formatting
     const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=8&format=json&origin=*&utf8=`;
 
-    const response = await fetch(url);
+    try {
+        // Add a timeout for better reliability
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-    if (!response.ok) {
-        throw new Error('Wikipedia API returned an error');
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            console.error('Wikipedia API error:', response.status);
+            return [];
+        }
+
+        const data = await response.json();
+        
+        if (!data.query || !data.query.search) {
+            return [];
+        }
+
+        // Transform Wikipedia results into our format
+        return data.query.search.map(function (article) {
+            // Wikipedia returns HTML in the snippet, so we strip the tags
+            const cleanSnippet = article.snippet.replace(/<[^>]+>/g, '');
+
+            return {
+                type: 'wiki',
+                title: article.title,
+                author: 'Wikipedia',
+                year: null,
+                description: cleanSnippet,
+                url: `https://en.wikipedia.org/wiki/${encodeURIComponent(article.title)}`,
+                cover: null,
+                editions: 0
+            };
+        });
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            console.error('Wikipedia request timed out');
+        } else {
+            console.error('Fetch Wikipedia failed:', error);
+        }
+        return [];
     }
-
-    const data = await response.json();
-
-    // Transform Wikipedia results into our format
-    const articles = data.query.search.map(function (article) {
-        // Wikipedia returns HTML in the snippet, so we strip the tags
-        const cleanSnippet = article.snippet.replace(/<[^>]+>/g, '');
-
-        return {
-            type: 'wiki',
-            title: article.title,
-            author: 'Wikipedia',
-            year: null,
-            description: cleanSnippet,
-            url: `https://en.wikipedia.org/wiki/${encodeURIComponent(article.title)}`,
-            cover: null,
-            editions: 0
-        };
-    });
-
-    return articles;
 }
 
 
