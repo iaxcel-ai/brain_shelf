@@ -104,6 +104,18 @@ body {
     background-color: #000;
 }
 
+.search-box .btn-secondary {
+    background-color: var(--sidebar-bg);
+    color: var(--primary);
+    border: 1px solid var(--border);
+    border-left: none;
+    font-size: 1.2rem;
+}
+
+.search-box .btn-secondary:hover {
+    background-color: var(--border);
+}
+
 /* Controls */
 .controls {
     display: flex;

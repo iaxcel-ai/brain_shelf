@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // 1. put together search across multiple APIs in parallel
+function surpriseMe() {
+    const topics = [
+        'Cosmology', 'Quantum Physics', 'Ancient Egypt', 'Renaissance Art', 
+        'Machine Learning', 'Oceanography', 'Jazz History', 'Gastronomy', 
+        'Sustainable Energy', 'Architecture', 'Genetics', 'Psychology'
+    ];
+    const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+    document.getElementById('searchInput').value = randomTopic;
+    handleSearch();
+}
+
 async function handleSearch() {
     const query = document.getElementById('searchInput').value.trim();
     if (!query) {
