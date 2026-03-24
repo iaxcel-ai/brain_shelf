@@ -16,82 +16,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 1. put together search across multiple APIs in parallel
 async function handleSearch() {
-    // Grab what the user typed
     const query = document.getElementById('searchInput').value.trim();
-
-    // Don't search if input is empty
     if (!query) {
         showStatus('Please type something to search for.', 'error');
         return;
     }
 
-    // Show loading message
     showStatus('Searching books and Wikipedia...', 'loading');
-
-    // Clear old results
     allResults = [];
     document.getElementById('results').innerHTML = '';
 
     try {
-        // Fetch from both APIs together
-        // Use allSettled so if one fails (like CORS in local dev), the other still shows
         const results = await Promise.allSettled([
-            fetchBooks(query),
-            fetchWikipedia(query)
+            ApiService.fetchBooks(query),
+            ApiService.fetchWikipedia(query)
         ]);
 
-        // Extract successful results
         const books = results[0].status === 'fulfilled' ? results[0].value : [];
         const wikiArticles = results[1].status === 'fulfilled' ? results[1].value : [];
-
-        // Combine both arrays into one
         allResults = [...books, ...wikiArticles];
 
-        // If one failed, notify user but show what we have
-        if (results[0].status === 'rejected' || results[1].status === 'rejected') {
-            console.warn('One or more APIs failed', results);
-            if (allResults.length === 0) {
-                showStatus('Could not reach search services. Please check your connection.', 'error');
-                return;
-            }
-        }
-
-        // If nothing was found at all
         if (allResults.length === 0) {
             showStatus('No results found. Try a different search term.', 'info');
             return;
         }
 
-        // Hide status and show results
         hideStatus();
-        applyFilters(); // this will render the cards
-
+        applyFilters();
     } catch (error) {
-        // If something goes wrong (network error, API down, etc.)
         console.error('Search error:', error);
-        showStatus(
-            'Something went wrong while searching. Check your internet connection and try again.',
-            'error'
-        );
+        showStatus('Something went wrong. Please try again.', 'error');
     }
 }
 
-
-// 2. Fetch books from Open Library (https://openlibrary.org/dev/docs/api/search)
-async function fetchBooks(query) {
-    // Build the API URL with a more robust query string
-    const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12&fields=key,title,author_name,first_publish_year,subject,cover_i,edition_count`;
-
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            console.error('Open Library error:', response.status);
-            return [];
-        }
-        const data = await response.json();
-        
-        return data.docs.map(function (book) {
-            return {
+// 2. API Service Object for modularity
+const ApiService = {
+    async fetchBooks(query) {
+        const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12&fields=key,title,author_name,first_publish_year,subject,cover_i,edition_count`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) return [];
+            const data = await response.json();
+            return data.docs.map(book => ({
                 type: 'book',
                 title: book.title || 'Untitled',
                 author: book.author_name ? book.author_name.join(', ') : 'Unknown author',
@@ -100,63 +66,37 @@ async function fetchBooks(query) {
                 url: `https://openlibrary.org${book.key}`,
                 cover: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : null,
                 editions: book.edition_count || 0
-            };
-        });
-    } catch (error) {
-        console.error('Fetch books failed:', error);
-        return [];
-    }
-}
-
-
-// 3. Fetch Wikipedia articles (https://www.mediawiki.org/wiki/API:Search)
-async function fetchWikipedia(query) {
-    const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=8&format=json&origin=*&utf8=`;
-
-    try {
-        // Add a timeout for better reliability
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-        const response = await fetch(url, { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-            console.error('Wikipedia API error:', response.status);
+            }));
+        } catch (error) {
             return [];
         }
+    },
 
-        const data = await response.json();
-        
-        if (!data.query || !data.query.search) {
-            return [];
-        }
-
-        // Transform Wikipedia results into our format
-        return data.query.search.map(function (article) {
-            // Wikipedia returns HTML in the snippet, so we strip the tags
-            const cleanSnippet = article.snippet.replace(/<[^>]+>/g, '');
-
-            return {
+    async fetchWikipedia(query) {
+        const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=8&format=json&origin=*&utf8=`;
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (!response.ok) return [];
+            const data = await response.json();
+            if (!data.query || !data.query.search) return [];
+            return data.query.search.map(article => ({
                 type: 'wiki',
                 title: article.title,
                 author: 'Wikipedia',
                 year: null,
-                description: cleanSnippet,
+                description: article.snippet.replace(/<[^>]+>/g, ''),
                 url: `https://en.wikipedia.org/wiki/${encodeURIComponent(article.title)}`,
                 cover: null,
                 editions: 0
-            };
-        });
-    } catch (error) {
-        if (error.name === 'AbortError') {
-            console.error('Wikipedia request timed out');
-        } else {
-            console.error('Fetch Wikipedia failed:', error);
+            }));
+        } catch (error) {
+            return [];
         }
-        return [];
     }
-}
+};
 
 
 // 4. Content filtering and sorting logic
@@ -258,12 +198,30 @@ function renderResults(items) {
                         >
                             ${isSaved ? '✓ Saved' : '+ Save'}
                         </button>
+                        <button class="btn-copy" onclick="copyToClipboard('${item.url}', this)">
+                            🔗 Copy
+                        </button>
                         ${readBtn}
                     </div>
                 </div>
             </div>
         `;
     }).join('');
+}
+
+// Helper to copy text to clipboard
+function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
 }
 
 
