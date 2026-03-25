@@ -349,6 +349,25 @@ body {
     padding-bottom: 10px;
 }
 
+.rl-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.rl-controls button {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    color: var(--secondary);
+}
+
+.rl-controls button:hover {
+    background: var(--border);
+    color: var(--primary);
+}
+
 .reading-list-items {
     flex: 1;
     overflow-y: auto;

@@ -273,13 +273,23 @@ function toggleSave(index, buttonElement) {
         readingList.push({
             title: item.title,
             type: item.type,
-            url: item.url
+            url: item.url,
+            addedAt: Date.now()
         });
         buttonElement.textContent = '✓ Saved';
         buttonElement.classList.add('saved');
     }
 
     saveReadingList();
+}
+
+function sortReadingList(order) {
+    if (order === 'newest') {
+        readingList.sort((a, b) => b.addedAt - a.addedAt);
+    } else {
+        readingList.sort((a, b) => a.addedAt - b.addedAt);
+    }
+    renderReadingList();
 }
 
 // Show or hide the reading list sidebar
