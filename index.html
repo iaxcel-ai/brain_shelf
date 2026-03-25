@@ -68,7 +68,11 @@
         <aside id="readingList" class="reading-list hidden" aria-labelledby="readingListHeading">
             <div class="reading-list-header">
                 <h2 id="readingListHeading">📚 Your Reading List</h2>
-                <button onclick="toggleReadingList()">✕</button>
+                <div class="rl-controls">
+                    <button onclick="sortReadingList('newest')" title="Newest first">↓</button>
+                    <button onclick="sortReadingList('oldest')" title="Oldest first">↑</button>
+                    <button onclick="toggleReadingList()" title="Close">✕</button>
+                </div>
             </div>
             <div id="readingListItems" class="reading-list-items">
                 <!-- Saved items appear here -->
