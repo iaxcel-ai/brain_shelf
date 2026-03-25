@@ -153,72 +153,52 @@ function applyFilters() {
 // 5. Generate and inject HTML for result cards
 function renderResults(items) {
     const container = document.getElementById('results');
+    container.innerHTML = '';
 
-    // If no items match the filter
     if (items.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#6b6b6b;grid-column:1/-1;padding:2rem;">No results match your current filter.</p>';
+        container.innerHTML = '<p class="no-results">No results match your current filter.</p>';
         return;
     }
 
-    // Generate card HTML from result items
-    container.innerHTML = items.map(function (item, index) {
-        // Determine the CSS class based on type
-        const cardClass = item.type === 'book' ? 'book-card' : 'wiki-card';
-        const badgeText = item.type === 'book' ? 'Book' : 'Wikipedia';
+    const fragment = document.createDocumentFragment();
 
-        // Build the meta info line
+    items.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = `card ${item.type === 'book' ? 'book-card' : 'wiki-card'}`;
+        
+        const badgeText = item.type === 'book' ? 'Book' : 'Wikipedia';
+        const isSaved = readingList.some(saved => saved.url === item.url);
+        
         let meta = '';
         if (item.type === 'book') {
-            meta = item.author;
-            if (item.year) meta += ' · ' + item.year;
-            if (item.editions > 1) meta += ' · ' + item.editions + ' editions';
+            meta = `${item.author}${item.year ? ' · ' + item.year : ''}${item.editions > 1 ? ' · ' + item.editions + ' editions' : ''}`;
         }
 
-        // Check if this item is already in the reading list
-        const isSaved = readingList.some(function (saved) {
-            return saved.url === item.url;
-        });
+        const coverHTML = item.cover ? `<div class="card-cover"><img src="${item.cover}" alt="Cover of ${item.title}" loading="lazy"></div>` : '';
+        const readBtnText = item.type === 'book' ? 'Read / Borrow →' : 'Read Article →';
 
-        // Build cover image HTML (books with covers get an image on the left)
-        let coverHTML = '';
-        if (item.cover) {
-            coverHTML = `<div class="card-cover"><img src="${item.cover}" alt="Cover of ${item.title}" loading="lazy"></div>`;
-        }
-
-        // Build the read/open button depending on type
-        let readBtn = '';
-        if (item.type === 'book') {
-            readBtn = `<a href="${item.url}" target="_blank" rel="noopener" class="btn-read">Read / Borrow →</a>`;
-        } else {
-            readBtn = `<a href="${item.url}" target="_blank" rel="noopener" class="btn-read">Read Article →</a>`;
-        }
-
-        return `
-            <div class="card ${cardClass}">
-                ${coverHTML}
-                <div class="card-body">
-                    <span class="card-badge">${badgeText}</span>
-                    <h3 class="card-title">
-                        <a href="${item.url}" target="_blank" rel="noopener">${item.title}</a>
-                    </h3>
-                    ${meta ? `<p class="card-meta">${meta}</p>` : ''}
-                    <p class="card-description">${item.description}</p>
-                    <div class="card-actions">
-                        <button 
-                            class="btn-save ${isSaved ? 'saved' : ''}" 
-                            onclick="toggleSave(${index}, this)"
-                        >
-                            ${isSaved ? '✓ Saved' : '+ Save'}
-                        </button>
-                        <button class="btn-copy" onclick="copyToClipboard('${item.url}', this)">
-                            🔗 Copy
-                        </button>
-                        ${readBtn}
-                    </div>
+        card.innerHTML = `
+            ${coverHTML}
+            <div class="card-body">
+                <span class="card-badge">${badgeText}</span>
+                <h3 class="card-title">
+                    <a href="${item.url}" target="_blank" rel="noopener">${item.title}</a>
+                </h3>
+                ${meta ? `<p class="card-meta">${meta}</p>` : ''}
+                <p class="card-description">${item.description}</p>
+                <div class="card-actions">
+                    <button class="btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSave(${index}, this)">
+                        ${isSaved ? '✓ Saved' : '+ Save'}
+                    </button>
+                    <button class="btn-copy" onclick="copyToClipboard('${item.url}', this)">🔗 Copy</button>
+                    <a href="${item.url}" target="_blank" rel="noopener" class="btn-read">${readBtnText}</a>
                 </div>
             </div>
         `;
-    }).join('');
+        fragment.appendChild(card);
+    });
+
+    container.appendChild(fragment);
 }
 
 // Helper to copy text to clipboard
