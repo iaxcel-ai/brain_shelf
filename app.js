@@ -7,6 +7,7 @@ let readingList = [];
 // Handle page initialization and global event listeners
 document.addEventListener('DOMContentLoaded', function () {
     loadReadingList();
+    loadTheme();
     // Let user press Enter to search
     document.getElementById('searchInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') handleSearch();
@@ -388,4 +389,23 @@ function showStatus(message, type) {
 function hideStatus() {
     const el = document.getElementById('statusMessage');
     el.className = 'status-message hidden';
+}
+
+// 8. Theme management
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('brain_shelf_theme', newTheme);
+    
+    // Update toggle icon
+    const btn = document.getElementById('themeToggle');
+    btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('brain_shelf_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 }
