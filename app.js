@@ -190,7 +190,8 @@ function renderResults(items) {
                     <button class="btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSave(${index}, this)">
                         ${isSaved ? '✓ Saved' : '+ Save'}
                     </button>
-                    <button class="btn-copy" onclick="copyToClipboard('${item.url}', this)">🔗 Copy</button>
+                    <button class="btn-copy" onclick="copyToClipboard('${item.url}', this)" title="Copy Link">🔗</button>
+                    <button class="btn-share" onclick="shareResult('${item.title}', '${item.url}')" title="Share Result">📤</button>
                     <a href="${item.url}" target="_blank" rel="noopener" class="btn-read">${readBtnText}</a>
                 </div>
             </div>
@@ -214,6 +215,25 @@ function copyToClipboard(text, btn) {
     }).catch(err => {
         console.error('Failed to copy:', err);
     });
+}
+
+// Helper to share result via Web Share API
+async function shareResult(title, url) {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: title,
+                text: `Check out this ${title} on brain_shelf!`,
+                url: url
+            });
+        } catch (err) {
+            console.error('Share failed:', err);
+        }
+    } else {
+        // Fallback to copy link
+        navigator.clipboard.writeText(url);
+        alert('Sharing not supported on this browser. Link copied to clipboard!');
+    }
 }
 
 
