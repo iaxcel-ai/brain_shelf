@@ -1,0 +1,321 @@
+:root {
+    --primary: #333;
+    --secondary: #666;
+    --accent: #d35400;
+    --wiki: #2980b9;
+    --bg: #fff;
+    --sidebar-bg: #f9f9f9;
+    --border: #ddd;
+    --radius: 4px;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--primary);
+    background-color: var(--bg);
+    line-height: 1.5;
+    padding: 20px;
+}
+
+/* Header */
+.header {
+    margin-bottom: 40px;
+    text-align: center;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 20px;
+}
+
+.logo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+.tagline {
+    color: var(--secondary);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Container */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Search Box */
+.search-section {
+    margin-bottom: 30px;
+}
+
+.search-box {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: var(--radius) 0 0 var(--radius);
+    font-size: 1rem;
+}
+
+.search-box button {
+    padding: 10px 20px;
+    background-color: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.search-box button:hover {
+    background-color: #000;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-group select {
+    padding: 5px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.reading-list-btn {
+    margin-left: auto;
+    padding: 6px 12px;
+    background: none;
+    border: 1px solid var(--primary);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Status Messages */
+.status-message {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.status-message.loading { background: #eee; }
+.status-message.error { background: #fee; color: #a00; border: 1px solid #ecc; }
+.status-message.info { background: #eef; color: #00a; border: 1px solid #cce; }
+
+.hidden { display: none !important; }
+
+/* Grid & Cards */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+}
+
+.card.book-card { border-left: 5px solid var(--accent); }
+.card.wiki-card { border-left: 5px solid var(--wiki); }
+
+.card-cover {
+    width: 60px;
+    height: 90px;
+    flex-shrink: 0;
+    background: #f0f0f0;
+}
+
+.card-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    flex: 1;
+}
+
+.card-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 5px;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.card-title a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.card-title a:hover {
+    text-decoration: underline;
+}
+
+.card-meta {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    margin-bottom: 8px;
+}
+
+.card-description {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.card-actions button, .card-actions a {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.card-actions .btn-save.saved {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+    color: #2e7d32;
+}
+
+.card-actions .btn-read {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Sidebar */
+.reading-list {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background: var(--sidebar-bg);
+    border-left: 1px solid var(--border);
+    padding: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.reading-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+}
+
+.reading-list-items {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.rl-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rl-item-title a {
+    font-size: 0.9rem;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.rl-item-type {
+    font-size: 0.7rem;
+    color: var(--secondary);
+}
+
+.rl-remove {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.clear-list-btn {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid red;
+    background: white;
+    color: red;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Footer */
+.footer {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--secondary);
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    body { padding: 10px; }
+    .logo { font-size: 1.8rem; }
+    .controls { flex-direction: column; align-items: stretch; }
+    .reading-list-btn { margin-left: 0; }
+    .card { flex-direction: column; }
+    .card-cover { width: 100%; height: auto; aspect-ratio: 2/3; max-height: 150px; }
+    .reading-list { width: 100%; }
+}
