@@ -71,10 +71,10 @@ const ApiService = {
             const data = await response.json();
             return data.docs.map(book => ({
                 type: 'book',
-                title: book.title || 'Untitled',
-                author: book.author_name ? book.author_name.join(', ') : 'Unknown author',
-                year: book.first_publish_year || null,
-                description: book.subject ? book.subject.slice(0, 5).join(', ') : 'No subjects listed',
+                title: book.title || 'Untitled Book',
+                author: book.author_name ? book.author_name.join(', ') : 'Anonymous',
+                year: book.first_publish_year || 'N/A',
+                description: book.subject ? book.subject.slice(0, 3).join(', ') : 'No topics available',
                 url: `https://openlibrary.org${book.key}`,
                 cover: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : null,
                 editions: book.edition_count || 0
