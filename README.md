@@ -1,51 +1,198 @@
-# brain_shelf
+# BrainShelf
 
-A web app that lets you search for books and Wikipedia articles in one place. Built for students who want to find academic or general knowledge quickly.
+A web app that lets you search for books and Wikipedia articles in one place. Built for students who want to find study resources without jumping between tabs.
 
-![brain_shelf preview](https://via.placeholder.com/1200x600?text=brain_shelf+Premium+Interface)
+## What it does
 
-## ✨ New Premium Features (Dev Week Mar 22-28)
+You type a topic, and BrainShelf pulls results from two sources at once:
+- **Open Library** for books and textbooks
+- **Wikipedia** for article summaries and background reading
 
-We've recently completed a massive upgrade to the platform, transforming it into a premium experience:
+You can filter results by type, sort books by publication year, and save anything to a reading list that sticks around between sessions.
 
-- **💎 Glassmorphism UI:** A modern, translucent design with backdrop blurs and smooth transitions.
-- **🌙 Adaptive Dark Mode:** Seamless theme switching with persistent user preferences.
-- **🎲 Surprise Me:** A random search feature that selects fascinating topics from a curated list.
-- **⚡ Performance Boost:** Optimized rendering using `DocumentFragment` for ultra-fast updates.
-- **📱 Tablet Optimized:** Fully responsive layout with refined grid systems for all devices.
-- **📤 Web Share API:** Instantly share interesting links using the native browser share feature.
-- **📚 Smart Reading List:** Persistent storage with sorting (Newest/Oldest) and bulk clear options.
+## How to run it locally
 
-## 🚀 How it Works
+No installation needed. It's just HTML, CSS, and JavaScript.
 
-The app interacts with two different APIs:
-1. **[Open Library API](https://openlibrary.org/developers/api):** Used for finding books, authors, and publication years.
-2. **[Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page):** Used for finding summaries of topics and general knowledge articles.
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/brain_shelf.git
+   cd brain_shelf
+   ```
+2. Open `index.html` in your browser. That's it.
 
-## 🛠️ Features
+   On Linux you can do:
+   ```bash
+   xdg-open index.html
+   ```
+   Or just double-click the file on any OS.
 
-- **Dual API Integration:** Fetches results from both Open Library and Wikipedia simultaneously.
-- **Card-based UI:** Results are displayed in a clean, organized card format.
-- **BEM Naming:** Modern CSS architecture for high maintainability.
-- **Error Handling:** Robust validation for API responses and network timeouts.
-- **Responsive Design:** Works beautifully on mobile, tablet, and desktop.
+3. Type a search term and hit Enter or click Search.
 
-## 📂 Project Structure
+## APIs used
 
-- `index.html`: The main entry point for the application.
-- `style.css`: Contains all custom styles (Vanilla CSS).
-- `app.js`: Handles API fetching, DOM manipulation, and app logic.
-- `.gitignore`: Specifies files to be ignored by Git.
+**Open Library Search API**
+- Docs: https://openlibrary.org/dev/docs/api/search
+- No API key required
+- Returns book titles, authors, publication years, subjects, and cover images
+- We request a maximum of 12 results per search to keep things fast
 
-## 🎯 About
+**Wikipedia MediaWiki API**
+- Docs: https://www.mediawiki.org/wiki/API:Search
+- No API key required
+- Returns article titles and text snippets matching the search query
+- We request up to 8 results per search
 
-This project was built as part of the Final Projects for the study period at **African Leadership University (ALU)**.
+Both APIs are free and open. No authentication or signup needed.
 
-**Created by:** Axcel Ishimwe
-**Institution:** African Leadership University, Kigali, Rwanda
-**Cohort:** ALU 2026
+## Features
 
-## 📜 Resources
-- [Google Fonts](https://fonts.google.com/) - Outfit & Inter
-- [Open Library API Documentation](https://openlibrary.org/developers/api)
-- [Wikipedia API Documentation](https://www.mediawiki.org/wiki/API:Main_page)
+- **Dual-source search**: fetches from Open Library and Wikipedia at the same time using `Promise.all`
+- **Filter by type**: show all results, books only, or Wikipedia only
+- **Sort books**: by relevance, newest first, or oldest first
+- **Reading list**: save items and they persist in localStorage across browser sessions
+- **Error handling**: network failures, empty results, and API errors all show clear messages to the user
+- **Responsive design**: works on mobile and desktop
+
+## Deployment to web servers
+
+### Prerequisites
+- Two web servers (web-01, web-02) with Nginx installed
+- One load balancer server (lb-01) with Nginx (or HAProxy)
+- SSH access to all three
+
+### Step 1: Upload files to both web servers
+
+From your local machine, copy the project files to each server:
+
+```bash
+# Copy to web-01
+scp -r index.html style.css app.js ubuntu@web-01:/var/www/html/brain_shelf/
+
+# Copy to web-02
+scp -r index.html style.css app.js ubuntu@web-02:/var/www/html/brain_shelf/
+```
+
+If the directory doesn't exist, SSH in and create it first:
+```bash
+ssh web-01
+sudo mkdir -p /var/www/html/brain_shelf
+sudo chown ubuntu:ubuntu /var/www/html/brain_shelf
+```
+
+### Step 2: Configure Nginx on both web servers
+
+On each web server (web-01 and web-02), edit the Nginx config:
+
+```bash
+sudo nano /etc/nginx/sites-available/default
+```
+
+Add or update the server block:
+
+```nginx
+server {
+    listen 80;
+    server_name _;
+
+    # Custom header to identify which server handled the request
+    add_header X-Served-By $hostname;
+
+    root /var/www/html/brain_shelf;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+```
+
+Test and restart Nginx:
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+### Step 3: Configure the load balancer (lb-01)
+
+SSH into lb-01 and edit the Nginx config:
+
+```bash
+ssh lb-01
+sudo nano /etc/nginx/sites-available/default
+```
+
+Set up load balancing between the two web servers:
+
+```nginx
+upstream brain_shelf_backend {
+    server web-01_IP;
+    server web-02_IP;
+}
+
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://brain_shelf_backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+Replace `web-01_IP` and `web-02_IP` with the actual private IP addresses of your servers.
+
+Test and restart:
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+### Step 4: Verify
+
+Check that both servers respond:
+```bash
+curl -sI http://web-01_IP | grep X-Served-By
+curl -sI http://web-02_IP | grep X-Served-By
+```
+
+Check load balancing:
+```bash
+curl -sI http://lb-01_IP | grep X-Served-By
+curl -sI http://lb-01_IP | grep X-Served-By
+```
+
+You should see the hostname alternating between the two web servers.
+
+## Project structure
+
+```
+brain_shelf/
+├── index.html      # Main page with search bar, filters, and results container
+├── style.css       # All styling (warm editorial theme, responsive)
+├── app.js          # All logic: API calls, filtering, sorting, reading list
+├── .gitignore      # Excludes OS files, editor configs, env files
+└── README.md       # This file
+```
+
+## Challenges and how I dealt with them
+
+**CORS with Wikipedia**: The Wikipedia API blocks browser requests by default. Adding `origin=*` to the query parameters fixes this. It took some digging through the MediaWiki docs to find.
+
+**HTML in Wikipedia snippets**: Wikipedia returns search results with HTML tags embedded in the text (like `<span class="searchmatch">`). I used a regex `.replace(/<[^>]+>/g, '')` to strip those out before displaying.
+
+**Keeping results in sync with filters**: Instead of re-fetching from the APIs every time the user changes a filter, I store all results in a global array (`allResults`) and just re-render from that. Faster and avoids hitting rate limits.
+
+**Reading list persistence**: localStorage can throw errors in some browsers (private mode, storage full). Wrapped the load/save calls in try-catch blocks so the app still works even if storage fails.
+
+## Credits
+
+- [Open Library](https://openlibrary.org/) — book data and cover images. Run by the Internet Archive.
+- [Wikipedia / MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) — article search and summaries. Run by the Wikimedia Foundation.
+- [Google Fonts](https://fonts.google.com/) — DM Serif Display and DM Sans typefaces.
+
+## Author
+
+Axcel Ishimwe — African Leadership University, Kigali, Rwanda
