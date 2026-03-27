@@ -10,18 +10,18 @@
 
     <!-- ==================== HEADER ==================== -->
     <header class="header">
-        <div class="header-inner">
-            <h1 class="logo">brain<span>shelf</span></h1>
-            <p class="tagline">Search books & Wikipedia in one place</p>
+        <div class="header__inner">
+            <h1 class="header__logo">brain<span>shelf</span></h1>
+            <p class="header__tagline">Search books & Wikipedia in one place</p>
             <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
         </div>
     </header>
 
     <!-- ==================== SEARCH SECTION ==================== -->
     <main class="container">
-        <section class="search-section" aria-labelledby="searchHeading">
+        <section class="search" aria-labelledby="searchHeading">
             <h2 id="searchHeading" class="sr-only">Search and Filters</h2>
-            <div class="search-box">
+            <div class="search__box">
                 <input 
                     type="text" 
                     id="searchInput" 
@@ -33,8 +33,8 @@
             </div>
 
             <!-- FILTERS: filter by type + sort books -->
-            <div class="controls">
-                <div class="filter-group">
+            <div class="search__controls">
+                <div class="search__filter-group">
                     <label for="filterType">Show:</label>
                     <select id="filterType" onchange="applyFilters()">
                         <option value="all">All Results</option>
@@ -42,7 +42,7 @@
                         <option value="wiki">Wikipedia Only</option>
                     </select>
                 </div>
-                <div class="filter-group">
+                <div class="search__filter-group">
                     <label for="sortBy">Sort books by:</label>
                     <select id="sortBy" onchange="applyFilters()">
                         <option value="relevance">Relevance</option>
@@ -50,7 +50,7 @@
                         <option value="oldest">Oldest First</option>
                     </select>
                 </div>
-                <button class="reading-list-btn" onclick="toggleReadingList()">
+                <button class="search__reading-list-btn" onclick="toggleReadingList()">
                     📚 Reading List (<span id="listCount">0</span>)
                 </button>
             </div>
@@ -74,21 +74,21 @@
                     <button onclick="toggleReadingList()" title="Close">✕</button>
                 </div>
             </div>
-            <div id="readingListItems" class="reading-list-items">
+            <div id="readingListItems" class="reading-list__items">
                 <!-- Saved items appear here -->
             </div>
-            <button class="clear-list-btn" onclick="clearReadingList()">Clear All</button>
+            <button class="btn-clear-all" onclick="clearReadingList()">Clear All</button>
         </aside>
     </main>
 
     <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
-        <p>
+        <p class="footer__text">
             Powered by 
-            <a href="https://openlibrary.org/developers/api" target="_blank">Open Library API</a> & 
-            <a href="https://www.mediawiki.org/wiki/API:Main_page" target="_blank">Wikipedia API</a>
+            <a href="https://openlibrary.org/developers/api" target="_blank" class="footer__link">Open Library API</a> & 
+            <a href="https://www.mediawiki.org/wiki/API:Main_page" target="_blank" class="footer__link">Wikipedia API</a>
         </p>
-        <p>Built by Axcel Ishimwe | ALU 2026</p>
+        <p class="footer__text">Built by Axcel Ishimwe | ALU 2026</p>
     </footer>
 
     <script src="app.js"></script>

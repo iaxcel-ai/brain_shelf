@@ -59,17 +59,22 @@ body {
     padding-bottom: 20px;
 }
 
-.logo {
+.header__inner {
+    position: relative;
+}
+
+.header__logo {
     font-size: 2.5rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
-.logo span {
+.header__logo span {
     color: var(--accent);
 }
-.tagline {
+
+.header__tagline {
     color: var(--secondary);
     font-size: 0.9rem;
     margin-top: 5px;
@@ -102,53 +107,56 @@ body {
     margin: 0 auto;
 }
 
-/* Search Box */
-.search-section {
+/* Search */
+.search {
     margin-bottom: 30px;
 }
 
-.search-box {
+.search__box {
     display: flex;
     margin-bottom: 15px;
 }
 
-.search-box input {
+.search__box input {
     flex: 1;
     padding: 10px;
     border: 1px solid var(--border);
     border-right: none;
     border-radius: var(--radius) 0 0 var(--radius);
     font-size: 1rem;
+    background: var(--card-bg);
+    color: var(--primary);
 }
 
-.search-box button {
+.search__box button {
     padding: 10px 20px;
     background-color: var(--primary);
     color: white;
     border: 1px solid var(--primary);
-    border-radius: 0 var(--radius) var(--radius) 0;
+    border-radius: 0;
     cursor: pointer;
     font-weight: bold;
 }
 
-.search-box button:hover {
+.search__box button:hover {
     background-color: #000;
 }
 
-.search-box .btn-secondary {
+.search__box .btn-secondary {
     background-color: var(--sidebar-bg);
     color: var(--primary);
     border: 1px solid var(--border);
     border-left: none;
+    border-radius: 0 var(--radius) var(--radius) 0;
     font-size: 1.2rem;
 }
 
-.search-box .btn-secondary:hover {
+.search__box .btn-secondary:hover {
     background-color: var(--border);
 }
 
 /* Controls */
-.controls {
+.search__controls {
     display: flex;
     gap: 15px;
     align-items: center;
@@ -156,19 +164,21 @@ body {
     flex-wrap: wrap;
 }
 
-.filter-group {
+.search__filter-group {
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
-.filter-group select {
+.search__filter-group select {
     padding: 5px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
+    background: var(--card-bg);
+    color: var(--primary);
 }
 
-.reading-list-btn {
+.search__reading-list-btn {
     margin-left: auto;
     padding: 6px 12px;
     background: none;
@@ -176,6 +186,7 @@ body {
     border-radius: var(--radius);
     cursor: pointer;
     font-weight: bold;
+    color: var(--primary);
 }
 
 /* Status Messages */
@@ -236,27 +247,27 @@ body {
     box-shadow: var(--shadow);
 }
 
-.card.book-card { border-left: 5px solid var(--accent); }
-.card.wiki-card { border-left: 5px solid var(--wiki); }
+.card--book { border-left: 5px solid var(--accent); }
+.card--wiki { border-left: 5px solid var(--wiki); }
 
-.card-cover {
+.card__cover {
     width: 60px;
     height: 90px;
     flex-shrink: 0;
     background: #f0f0f0;
 }
 
-.card-cover img {
+.card__cover img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.card-body {
+.card__body {
     flex: 1;
 }
 
-.card-badge {
+.card__badge {
     display: inline-block;
     font-size: 0.7rem;
     font-weight: bold;
@@ -265,37 +276,37 @@ body {
     margin-bottom: 5px;
 }
 
-.card-title {
+.card__title {
     font-size: 1.2rem;
     margin-bottom: 5px;
 }
 
-.card-title a {
+.card__title a {
     color: var(--primary);
     text-decoration: none;
 }
 
-.card-title a:hover {
+.card__title a:hover {
     text-decoration: underline;
 }
 
-.card-meta {
+.card__meta {
     font-size: 0.85rem;
     color: var(--secondary);
     margin-bottom: 8px;
 }
 
-.card-description {
+.card__description {
     font-size: 0.9rem;
     margin-bottom: 12px;
 }
 
-.card-actions {
+.card__actions {
     display: flex;
     gap: 10px;
 }
 
-.card-actions button, .card-actions a {
+.card__actions button, .card__actions a {
     padding: 5px 10px;
     font-size: 0.8rem;
     border: 1px solid var(--border);
@@ -307,29 +318,29 @@ body {
     font-weight: bold;
 }
 
-.card-actions .btn-save.saved {
+.btn-save.saved {
     background-color: #e8f5e9;
     border-color: #4caf50;
     color: #2e7d32;
 }
 
-.card-actions .btn-read {
+.btn-read {
     background-color: var(--primary);
     color: white;
     border-color: var(--primary);
 }
 
-.card-actions .btn-copy.copied {
+.btn-copy.copied {
     background-color: #e3f2fd;
     border-color: var(--wiki);
     color: var(--wiki);
 }
 
-.card-actions .btn-share {
+.btn-share {
     background-color: var(--sidebar-bg);
 }
 
-.card-actions .btn-share:hover {
+.btn-share:hover {
     background-color: var(--border);
 }
 
@@ -348,7 +359,7 @@ body {
     flex-direction: column;
 }
 
-.reading-list-header {
+.reading-list__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -357,12 +368,12 @@ body {
     padding-bottom: 10px;
 }
 
-.rl-controls {
+.reading-list__controls {
     display: flex;
     gap: 5px;
 }
 
-.rl-controls button {
+.reading-list__controls button {
     background: none;
     border: 1px solid var(--border);
     border-radius: 4px;
@@ -371,12 +382,12 @@ body {
     color: var(--secondary);
 }
 
-.rl-controls button:hover {
+.reading-list__controls button:hover {
     background: var(--border);
     color: var(--primary);
 }
 
-.reading-list-items {
+.reading-list__items {
     flex: 1;
     overflow-y: auto;
 }
@@ -389,18 +400,22 @@ body {
     align-items: center;
 }
 
-.rl-item-title a {
+.rl-item__info {
+    flex: 1;
+}
+
+.rl-item__title a {
     font-size: 0.9rem;
     color: var(--primary);
     text-decoration: none;
 }
 
-.rl-item-type {
+.rl-item__type {
     font-size: 0.7rem;
     color: var(--secondary);
 }
 
-.rl-remove {
+.rl-item__remove {
     background: none;
     border: none;
     color: red;
@@ -408,7 +423,7 @@ body {
     font-size: 1rem;
 }
 
-.clear-list-btn {
+.btn-clear-all {
     margin-top: 15px;
     padding: 10px;
     border: 1px solid red;

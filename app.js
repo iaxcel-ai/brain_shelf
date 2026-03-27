@@ -164,7 +164,7 @@ function renderResults(items) {
 
     items.forEach((item, index) => {
         const card = document.createElement('div');
-        card.className = `card ${item.type === 'book' ? 'book-card' : 'wiki-card'}`;
+        card.className = `card ${item.type === 'book' ? 'card--book' : 'card--wiki'}`;
         
         const badgeText = item.type === 'book' ? 'Book' : 'Wikipedia';
         const isSaved = readingList.some(saved => saved.url === item.url);
@@ -174,19 +174,19 @@ function renderResults(items) {
             meta = `${item.author}${item.year ? ' · ' + item.year : ''}${item.editions > 1 ? ' · ' + item.editions + ' editions' : ''}`;
         }
 
-        const coverHTML = item.cover ? `<div class="card-cover"><img src="${item.cover}" alt="Cover of ${item.title}" loading="lazy"></div>` : '';
+        const coverHTML = item.cover ? `<div class="card__cover"><img src="${item.cover}" alt="Cover of ${item.title}" loading="lazy"></div>` : '';
         const readBtnText = item.type === 'book' ? 'Read / Borrow →' : 'Read Article →';
 
         card.innerHTML = `
             ${coverHTML}
-            <div class="card-body">
-                <span class="card-badge">${badgeText}</span>
-                <h3 class="card-title">
+            <div class="card__body">
+                <span class="card__badge">${badgeText}</span>
+                <h3 class="card__title">
                     <a href="${item.url}" target="_blank" rel="noopener">${item.title}</a>
                 </h3>
-                ${meta ? `<p class="card-meta">${meta}</p>` : ''}
-                <p class="card-description">${item.description}</p>
-                <div class="card-actions">
+                ${meta ? `<p class="card__meta">${meta}</p>` : ''}
+                <p class="card__description">${item.description}</p>
+                <div class="card__actions">
                     <button class="btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSave(${index}, this)">
                         ${isSaved ? '✓ Saved' : '+ Save'}
                     </button>
@@ -334,13 +334,13 @@ function renderReadingList() {
         const typeLabel = item.type === 'book' ? 'Book' : 'Wikipedia';
         return `
             <div class="rl-item">
-                <div class="rl-item-info">
-                    <div class="rl-item-title">
+                <div class="rl-item__info">
+                    <div class="rl-item__title">
                         <a href="${item.url}" target="_blank" rel="noopener">${item.title}</a>
                     </div>
-                    <span class="rl-item-type">${typeLabel}</span>
+                    <span class="rl-item__type">${typeLabel}</span>
                 </div>
-                <button class="rl-remove" onclick="removeFromList(${index})" title="Remove">✕</button>
+                <button class="rl-item__remove" onclick="removeFromList(${index})" title="Remove">✕</button>
             </div>
         `;
     }).join('');
