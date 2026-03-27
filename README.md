@@ -1,10 +1,10 @@
-# BrainShelf
+# brain_shelf
 
-A web app that lets you search for books and Wikipedia articles in one place. Built for students who want to find study resources without jumping between tabs.
+**brain_shelf** is a minimalist, high-utility academic research tool designed for students and researchers. It solves the "fragmented research" problem by aggregating academic books from Open Library and detailed article summaries from Wikipedia into a single, searchable interface. This eliminates the need to jump between multiple tabs and search engines, providing genuine value for academic deep-dives.
 
 ## What it does
 
-You type a topic, and BrainShelf pulls results from two sources at once:
+You type a topic, and brain_shelf pulls results from two sources at once:
 - **Open Library** for books and textbooks
 - **Wikipedia** for article summaries and background reading
 
@@ -185,13 +185,15 @@ brain_shelf/
 
 **Keeping results in sync with filters**: Instead of re-fetching from the APIs every time the user changes a filter, I store all results in a global array (`allResults`) and just re-render from that. Faster and avoids hitting rate limits.
 
+**API Failure Resilience**: I initially used `Promise.all` for fetching, but found that if one API failed (like Open Library having CORS issues in some local environments), the whole search would fail. I fixed this by using `Promise.allSettled`, which allows the app to display whatever data is available even if one source is down.
+
 **Reading list persistence**: localStorage can throw errors in some browsers (private mode, storage full). Wrapped the load/save calls in try-catch blocks so the app still works even if storage fails.
 
 ## Credits
 
 - [Open Library](https://openlibrary.org/) — book data and cover images. Run by the Internet Archive.
 - [Wikipedia / MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) — article search and summaries. Run by the Wikimedia Foundation.
-- [Google Fonts](https://fonts.google.com/) — DM Serif Display and DM Sans typefaces.
+- [System Font Stack](https://modernfontstacks.com/) — High-performance, minimalist typography used to ensure fast load times and a "vanilla" aesthetic.
 
 ## Author
 
