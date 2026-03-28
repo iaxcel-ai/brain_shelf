@@ -1,30 +1,51 @@
-# 🧠 brain_shelf
+# brain_shelf
 
-A premium, glassmorphic search engine for books and knowledge. Explore the world of literature and general information in one sleek, unified interface.
+A web app that lets you search for books and Wikipedia articles in one place. Built for students who want to find academic or general knowledge quickly.
 
 ![brain_shelf preview](https://via.placeholder.com/1200x600?text=brain_shelf+Premium+Interface)
 
-## ✨ Features
+## ✨ New Premium Features (Dev Week Mar 22-28)
 
-- **Dual API Search:** Simultaneously browse books from **Open Library** and articles from **Wikipedia**.
-- **Dark Mode:** Seamless theme switching with persistent user preferences.
-- **Glassmorphism UI:** Modern, translucent design with backdrop blurs and smooth transitions.
-- **Surprise Me:** Feeling curious? Let the "Surprise Me" feature pick a fascinating topic for you.
-- **Reading List:** Save your favorite finds to a local reading list, persisted across sessions.
-- **Sorting & Filtering:** Organize search results by relevance or date, and filter by source.
-- **Web Share Integration:** Instantly share interesting links using the native browser share API.
-- **Responsive Design:** Fully optimized for desktop, tablet, and mobile viewing.
+We've recently completed a massive upgrade to the platform, transforming it into a premium experience:
 
-## 🛠️ Technical Implementation
+- **💎 Glassmorphism UI:** A modern, translucent design with backdrop blurs and smooth transitions.
+- **🌙 Adaptive Dark Mode:** Seamless theme switching with persistent user preferences.
+- **🎲 Surprise Me:** A random search feature that selects fascinating topics from a curated list.
+- **⚡ Performance Boost:** Optimized rendering using `DocumentFragment` for ultra-fast updates.
+- **📱 Tablet Optimized:** Fully responsive layout with refined grid systems for all devices.
+- **📤 Web Share API:** Instantly share interesting links using the native browser share feature.
+- **📚 Smart Reading List:** Persistent storage with sorting (Newest/Oldest) and bulk clear options.
 
-- **Vanilla CSS:** Custom design system using CSS variables, BEM naming, and modern HSL color palettes.
-- **Modular JavaScript:** Service-oriented architecture with a centralized `ApiService`.
-- **Performance Optimized:** Uses `DocumentFragment` for ultra-fast DOM rendering and layout stability.
-- **Accessibility (A11y):** Semantic HTML5, ARIA roles, and screen-recorder-ready utility classes.
+## 🚀 How it Works
 
-## 🚀 Getting Started
+The app interacts with two different APIs:
+1. **[Open Library API](https://openlibrary.org/developers/api):** Used for finding books, authors, and publication years.
+2. **[Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page):** Used for finding summaries of topics and general knowledge articles.
 
-Simply open `index.html` in any modern web browser. No compilation or installation required.
+## 🛠️ Features
 
----
-Built by Axcel Ishimwe | ALU 2026
+- **Dual API Integration:** Fetches results from both Open Library and Wikipedia simultaneously.
+- **Card-based UI:** Results are displayed in a clean, organized card format.
+- **BEM Naming:** Modern CSS architecture for high maintainability.
+- **Error Handling:** Robust validation for API responses and network timeouts.
+- **Responsive Design:** Works beautifully on mobile, tablet, and desktop.
+
+## 📂 Project Structure
+
+- `index.html`: The main entry point for the application.
+- `style.css`: Contains all custom styles (Vanilla CSS).
+- `app.js`: Handles API fetching, DOM manipulation, and app logic.
+- `.gitignore`: Specifies files to be ignored by Git.
+
+## 🎯 About
+
+This project was built as part of the Final Projects for the study period at **African Leadership University (ALU)**.
+
+**Created by:** Axcel Ishimwe
+**Institution:** African Leadership University, Kigali, Rwanda
+**Cohort:** ALU 2026
+
+## 📜 Resources
+- [Google Fonts](https://fonts.google.com/) - Outfit & Inter
+- [Open Library API Documentation](https://openlibrary.org/developers/api)
+- [Wikipedia API Documentation](https://www.mediawiki.org/wiki/API:Main_page)
