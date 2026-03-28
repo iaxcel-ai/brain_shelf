@@ -88,21 +88,25 @@ body {
     position: absolute;
     top: 20px;
     right: 20px;
-    background: var(--sidebar-bg);
-    border: 1px solid var(--border);
+    background: var(--primary);
+    color: var(--bg);
+    border: 2px solid var(--primary);
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .theme-toggle:hover {
-    background: var(--border);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 /* Container */
