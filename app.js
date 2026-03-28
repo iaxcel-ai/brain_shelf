@@ -15,7 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-// 1. put together search across multiple APIs in parallel
+/**
+ * Triggers a search for a random topic from a curated list.
+ * Ideal for users looking for inspiration or general knowledge.
+ */
 function surpriseMe() {
     const topics = [
         'Cosmology', 'Quantum Physics', 'Ancient Egypt', 'Renaissance Art', 
@@ -27,6 +30,10 @@ function surpriseMe() {
     handleSearch();
 }
 
+/**
+ * Orchestrates the search process by fetching data from multiple APIs in parallel.
+ * Updates the UI with loading states and handles potential errors.
+ */
 async function handleSearch() {
     const query = document.getElementById('searchInput').value.trim();
     if (!query) {
