@@ -115,56 +115,48 @@ sudo systemctl restart nginx
 
 ### Step 3: Configure the load balancer (lb-01)
 
-SSH into lb-01 and edit the Nginx config:
+lb-01 uses **HAProxy** (not Nginx). SSH in and edit the HAProxy config:
 
 ```bash
 ssh lb-01
-sudo nano /etc/nginx/sites-available/default
+sudo nano /etc/haproxy/haproxy.cfg
 ```
 
-Set up load balancing between the two web servers:
+Add or update the frontend and backend blocks:
 
-```nginx
-upstream brain_shelf_backend {
-    server web-01_IP;
-    server web-02_IP;
-}
+```
+frontend http-in
+    bind *:80
+    default_backend web_servers
 
-server {
-    listen 80;
-    server_name _;
-
-    location / {
-        proxy_pass http://brain_shelf_backend;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
+backend web_servers
+    balance roundrobin
+    server web-01 web-01_IP:80 check
+    server web-02 web-02_IP:80 check
 ```
 
-Replace `web-01_IP` and `web-02_IP` with the actual private IP addresses of your servers.
+Replace `web-01_IP` and `web-02_IP` with the actual IP addresses of your web servers.
 
-Test and restart:
+Validate and restart HAProxy:
 ```bash
-sudo nginx -t
-sudo systemctl restart nginx
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+sudo systemctl restart haproxy
 ```
 
 ### Step 4: Verify
 
-Check that both servers respond:
+Check that both servers respond directly:
 ```bash
-curl -sI http://web-01_IP | grep X-Served-By
-curl -sI http://web-02_IP | grep X-Served-By
+curl -sI http://web-01_IP | grep -i X-Served-By
+curl -sI http://web-02_IP | grep -i X-Served-By
 ```
 
-Check load balancing:
+Check load balancing (run multiple times — the hostname should alternate):
 ```bash
-curl -sI http://lb-01_IP | grep X-Served-By
-curl -sI http://lb-01_IP | grep X-Served-By
+for i in 1 2 3 4; do curl -sI http://lb-01_IP | grep -i x-served-by; done
 ```
 
-You should see the hostname alternating between the two web servers.
+You should see `web-01` and `web-02` alternating, confirming round-robin is working.
 
 ## Project structure
 
