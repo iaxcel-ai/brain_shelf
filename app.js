@@ -195,10 +195,15 @@ function renderResults(items) {
                 <p class="card__description">${item.description}</p>
                 <div class="card__actions">
                     <button class="btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSave(${index}, this)">
-                        ${isSaved ? '✓ Saved' : '+ Save'}
+                        <i data-lucide="${isSaved ? 'check' : 'plus'}"></i>
+                        <span>${isSaved ? 'Saved' : 'Save'}</span>
                     </button>
-                    <button class="btn-copy" onclick="copyToClipboard('${item.url}', this)" title="Copy Link">🔗</button>
-                    <button class="btn-share" onclick="shareResult('${item.title}', '${item.url}')" title="Share Result">📤</button>
+                    <button class="btn-copy" onclick="copyToClipboard('${item.url}', this)" title="Copy Link">
+                        <i data-lucide="link"></i>
+                    </button>
+                    <button class="btn-share" onclick="shareResult('${item.title}', '${item.url}')" title="Share Result">
+                        <i data-lucide="share"></i>
+                    </button>
                     <a href="${item.url}" target="_blank" rel="noopener" class="btn-read">${readBtnText}</a>
                 </div>
             </div>
@@ -207,6 +212,8 @@ function renderResults(items) {
     });
 
     container.appendChild(fragment);
+    // Refresh icons
+    if (window.lucide) lucide.createIcons();
 }
 
 // Helper to copy text to clipboard
@@ -293,7 +300,7 @@ function toggleSave(index, buttonElement) {
     if (existingIndex >= 0) {
         // Remove it
         readingList.splice(existingIndex, 1);
-        buttonElement.textContent = '+ Save';
+        buttonElement.innerHTML = '<i data-lucide="plus"></i><span>Save</span>';
         buttonElement.classList.remove('saved');
     } else {
         // Add it
@@ -303,9 +310,11 @@ function toggleSave(index, buttonElement) {
             url: item.url,
             addedAt: Date.now()
         });
-        buttonElement.textContent = '✓ Saved';
+        buttonElement.innerHTML = '<i data-lucide="check"></i><span>Saved</span>';
         buttonElement.classList.add('saved');
     }
+
+    if (window.lucide) lucide.createIcons();
 
     saveReadingList();
 }
@@ -347,10 +356,14 @@ function renderReadingList() {
                     </div>
                     <span class="rl-item__type">${typeLabel}</span>
                 </div>
-                <button class="rl-item__remove" onclick="removeFromList(${index})" title="Remove">✕</button>
+                <button class="rl-item__remove" onclick="removeFromList(${index})" title="Remove">
+                    <i data-lucide="trash-2"></i>
+                </button>
             </div>
         `;
     }).join('');
+    
+    if (window.lucide) lucide.createIcons();
 }
 
 // Remove a single item from reading list
@@ -415,14 +428,24 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('brain_shelf_theme', newTheme);
     
-    // Update toggle icon
-    const btn = document.getElementById('themeToggle');
-    btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    updateThemeUI(newTheme);
 }
 
 function loadTheme() {
     const savedTheme = localStorage.getItem('brain_shelf_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    const btn = document.getElementById('themeToggle');
-    if (btn) btn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    updateThemeUI(savedTheme);
+}
+
+function updateThemeUI(theme) {
+    const themeIcon = document.getElementById('themeIcon');
+    if (!themeIcon) return;
+    
+    if (theme === 'dark') {
+        themeIcon.setAttribute('data-lucide', 'sun');
+    } else {
+        themeIcon.setAttribute('data-lucide', 'moon');
+    }
+    
+    if (window.lucide) lucide.createIcons();
 }

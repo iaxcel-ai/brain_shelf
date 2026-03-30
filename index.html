@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>brain_shelf - Find Books & Knowledge</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,7 +19,9 @@
         <div class="header__inner">
             <h1 class="header__logo">brain<span>shelf</span></h1>
             <p class="header__tagline">Search books & Wikipedia in one place</p>
-            <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
+            <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                <i data-lucide="moon" id="themeIcon"></i>
+            </button>
         </div>
     </header>
 
@@ -29,7 +37,9 @@
                     autocomplete="off"
                 >
                 <button id="searchBtn" onclick="handleSearch()">Search</button>
-                <button id="surpriseBtn" class="btn-secondary" onclick="surpriseMe()" title="Random Search">✨</button>
+                <button id="surpriseBtn" class="btn-secondary" onclick="surpriseMe()" title="Random Search">
+                    <i data-lucide="sparkles"></i>
+                </button>
             </div>
 
             <!-- FILTERS: filter by type + sort books -->
@@ -51,7 +61,7 @@
                     </select>
                 </div>
                 <button class="search__reading-list-btn" onclick="toggleReadingList()">
-                    📚 Reading List (<span id="listCount">0</span>)
+                    <i data-lucide="library"></i> Reading List (<span id="listCount">0</span>)
                 </button>
             </div>
         </section>
@@ -67,11 +77,17 @@
         <!-- ==================== READING LIST SIDEBAR ==================== -->
         <aside id="readingList" class="reading-list hidden" aria-labelledby="readingListHeading">
             <div class="reading-list-header">
-                <h2 id="readingListHeading">📚 Your Reading List</h2>
+                <h2 id="readingListHeading"><i data-lucide="library"></i> Your Reading List</h2>
                 <div class="rl-controls">
-                    <button onclick="sortReadingList('newest')" title="Newest first">↓</button>
-                    <button onclick="sortReadingList('oldest')" title="Oldest first">↑</button>
-                    <button onclick="toggleReadingList()" title="Close">✕</button>
+                    <button onclick="sortReadingList('newest')" title="Newest first">
+                        <i data-lucide="arrow-down-z-a"></i>
+                    </button>
+                    <button onclick="sortReadingList('oldest')" title="Oldest first">
+                        <i data-lucide="arrow-up-z-a"></i>
+                    </button>
+                    <button onclick="toggleReadingList()" title="Close">
+                        <i data-lucide="x"></i>
+                    </button>
                 </div>
             </div>
             <div id="readingListItems" class="reading-list__items">
@@ -92,6 +108,10 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
 
     <!-- ==================== MODALS ==================== -->
     <div id="confirmModal" class="modal hidden">
