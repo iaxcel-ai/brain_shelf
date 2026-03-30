@@ -16,7 +16,7 @@ No installation needed. It's just HTML, CSS, and JavaScript.
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/brain_shelf.git
+   git clone https://github.com/iaxcel-ai/brain_shelf.git
    cd brain_shelf
    ```
 2. Open `index.html` in your browser. That's it.
@@ -47,11 +47,14 @@ Both APIs are free and open. No authentication or signup needed.
 
 ## Features
 
-- **Dual-source search**: fetches from Open Library and Wikipedia at the same time using `Promise.all`
+- **Dual-source search**: fetches from Open Library and Wikipedia in parallel using `Promise.allSettled` — one API failing won't break the other
+- **Surprise Me**: one-click random topic search from a curated list of subjects
 - **Filter by type**: show all results, books only, or Wikipedia only
 - **Sort books**: by relevance, newest first, or oldest first
-- **Reading list**: save items and they persist in localStorage across browser sessions
-- **Error handling**: network failures, empty results, and API errors all show clear messages to the user
+- **Reading list**: save items and they persist in localStorage across browser sessions; sort saved items by title (A–Z or Z–A)
+- **Copy & share**: copy a result link to clipboard or trigger the native share dialog
+- **Dark mode**: toggle between light and dark themes, preference saved to localStorage
+- **Error handling**: network failures, empty results, and API errors all show clear messages; Wikipedia requests include an 8-second abort timeout
 - **Responsive design**: works on mobile and desktop
 
 ## Deployment to web servers
@@ -185,7 +188,8 @@ brain_shelf/
 
 - [Open Library](https://openlibrary.org/) — book data and cover images. Run by the Internet Archive.
 - [Wikipedia / MediaWiki API](https://www.mediawiki.org/wiki/API:Main_page) — article search and summaries. Run by the Wikimedia Foundation.
-- [System Font Stack](https://modernfontstacks.com/) — High-performance, minimalist typography used to ensure fast load times and a "vanilla" aesthetic.
+- [Lucide Icons](https://lucide.dev/) — open-source icon set used throughout the UI.
+- [Google Fonts](https://fonts.google.com/) — Inter and Outfit typefaces.
 
 ## Author
 
