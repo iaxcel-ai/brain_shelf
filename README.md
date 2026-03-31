@@ -2,6 +2,10 @@
 
 **brain_shelf** is a minimalist, high-utility academic research tool designed for students and researchers. It solves the "fragmented research" problem by aggregating academic books from Open Library and detailed article summaries from Wikipedia into a single, searchable interface. This eliminates the need to jump between multiple tabs and search engines, providing genuine value for academic deep-dives.
 
+## Demo Video
+
+[Watch on YouTube](https://youtu.be/Kr3MgJeZW2o)
+
 ## What it does
 
 You type a topic, and brain_shelf pulls results from two sources at once:
