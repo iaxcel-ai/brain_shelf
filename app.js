@@ -30,9 +30,12 @@ function surpriseMe() {
     handleSearch();
 }
 
+// Simple in-memory cache so repeated searches are instant
+const searchCache = new Map();
+
 /**
- * Orchestrates the search process by fetching data from multiple APIs in parallel.
- * Updates the UI with loading states and handles potential errors.
+ * Orchestrates the search process. Shows Wikipedia results immediately
+ * as they arrive, then appends books when they load — no waiting for both.
  */
 async function handleSearch() {
     const query = document.getElementById('searchInput').value.trim();
@@ -41,37 +44,50 @@ async function handleSearch() {
         return;
     }
 
+    // Serve from cache instantly if available
+    if (searchCache.has(query)) {
+        allResults = searchCache.get(query);
+        hideStatus();
+        applyFilters();
+        return;
+    }
+
     showStatus('Searching books and Wikipedia...', 'loading');
     allResults = [];
     document.getElementById('results').innerHTML = '';
 
-    try {
-        const results = await Promise.allSettled([
-            ApiService.fetchBooks(query),
-            ApiService.fetchWikipedia(query)
-        ]);
+    // Show Wikipedia results the moment they arrive
+    ApiService.fetchWikipedia(query).then(articles => {
+        if (articles.length > 0) {
+            allResults = [...allResults, ...articles];
+            hideStatus();
+            applyFilters();
+        }
+    });
 
-        const books = results[0].status === 'fulfilled' ? results[0].value : [];
-        const wikiArticles = results[1].status === 'fulfilled' ? results[1].value : [];
-        allResults = [...books, ...wikiArticles];
-
+    // Append books when they arrive (Open Library is slower)
+    ApiService.fetchBooks(query).then(books => {
+        if (books.length > 0) {
+            allResults = [...books, ...allResults.filter(r => r.type === 'wiki')];
+            hideStatus();
+            applyFilters();
+        }
+        // Cache the final combined result
+        searchCache.set(query, allResults);
         if (allResults.length === 0) {
             showStatus('No results found. Try a different search term.', 'info');
-            return;
         }
-
-        hideStatus();
-        applyFilters();
-    } catch (error) {
-        console.error('Search error:', error);
-        showStatus('Something went wrong. Please try again.', 'error');
-    }
+    }).catch(() => {
+        if (allResults.length === 0) {
+            showStatus('Something went wrong. Please try again.', 'error');
+        }
+    });
 }
 
 // 2. API Service Object for modularity
 const ApiService = {
     async fetchBooks(query) {
-        const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12&fields=key,title,author_name,first_publish_year,subject,cover_i,edition_count`;
+        const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=6&fields=key,title,author_name,first_publish_year,subject,cover_i,edition_count`;
         try {
             const response = await fetch(url);
             if (!response.ok) return [];
@@ -92,7 +108,7 @@ const ApiService = {
     },
 
     async fetchWikipedia(query) {
-        const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=8&format=json&origin=*&utf8=`;
+        const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=5&format=json&origin=*&utf8=`;
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 8000);
